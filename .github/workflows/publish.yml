@@ -29,7 +29,7 @@ jobs:
           password: "${{ secrets.DOCKERHUB_TOKEN }}"
 
       - name: "Push"
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           push: true
           tags: "joshuasing/kani:latest,joshuasing/kani:${{ inputs.verison }}"
