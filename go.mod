@@ -3,7 +3,7 @@ module github.com/HyperaDev/kani
 go 1.19
 
 require (
-	github.com/coreos/go-oidc/v3 v3.3.0
+	github.com/coreos/go-oidc/v3 v3.4.0
 	github.com/gofiber/fiber/v2 v2.37.1
 )
 
