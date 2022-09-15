@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kani
+  namespace: default
+  labels:
+    app: kani
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: kani
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        deployment: kani
+    spec:
+      containers:
+        - name: kani
+          image: joshuasing/kani:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+              scheme: HTTP
+          resources:
+            limits:
+              memory: "32Mi"
+              cpu: "1"

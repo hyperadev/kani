@@ -1,0 +1,60 @@
+# GitHub Actions workflow to build, test and publish the project.
+name: "Go"
+on:
+  push:
+    branches: ["main"]
+
+env:
+  GO_VERSION: "1.19.x"
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v3
+
+      - name: "Set up Go ${{ env.GO_VERSION }}"
+        uses: actions/setup-go@v3
+        with:
+          go-version: "${{ env.GO_VERSION }}"
+
+      - name: "Set up Cache"
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-golang-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-golang-
+
+      - name: "Build"
+        run: go build -v ./...
+
+  test:
+    name: "Test"
+    runs-on: "ubuntu-latest"
+    needs: "build"
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v3
+
+      - name: "Set up Go ${{ env.GO_VERSION }}"
+        uses: actions/setup-go@v3
+        with:
+          go-version: "${{ env.GO_VERSION }}"
+
+      - name: "Set up Cache"
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-golang-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-golang-
+
+      - name: "Test"
+        run: go test -v ./...

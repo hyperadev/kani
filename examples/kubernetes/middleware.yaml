@@ -1,0 +1,12 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: whoami-auth
+  namespace: default
+spec:
+  forwardAuth:
+    # Replace <AUD> with your Cloudflare Access application audience.
+    address: http://kani/<AUD>
+
+    # Optionally you can forward the authenticated user's email (or common name) to the backend.
+    authResponseHeaders: X-Auth-User

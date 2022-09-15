@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+
+  # Traefik service
+  traefik:
+    image: "traefik:v2.9"
+    container_name: "traefik"
+    restart: always
+    networks:
+      - web
+      - kani
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik.toml:/etc/traefik/traefik.toml:ro"
+
+  # Kani service
+  kani:
+    image: joshuasing/kani:latest
+    container_name: "kani"
+    restart: always
+    networks:
+      - kani
+    expose:
+      - 3000
+    environment:
+      CLOUDFLARE_DOMAIN: "https://foo.cloudflareaccess.com/"
+
+  whoami:
+    image: traefik/whoami
+    container_name: "whoami"
+    networks:
+      - web
+    expose:
+      - 80
+    labels:
+      # Traefik config
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
+      - "traefik.http.routers.whoami.entrypoints=web"
+
+      # Set up middleware
+      - "traefik.http.routers.whoami.middlewares=whoami-auth@docker"
+      # Replace <AUD> with your Cloudflare Access application audience.
+      - "traefik.http.middlewares.whoami-auth.forwardauth.address=http://kani:3000/<AUD>"
+
+      # Optionally you can forward the authenticated user's email (or common name) to the backend.
+      - "traefik.http.middlewares.whoami-auth.forwardauth.authResponseHeaders=X-Auth-User"
+
+networks:
+  web:
+    name: web
+  kani:
