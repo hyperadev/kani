@@ -1,0 +1,10 @@
+[log]
+level = "INFO"
+
+[entryPoints]
+  [entryPoints.web]
+  address = ":80"
+
+[providers]
+  [providers.docker]
+  exposedByDefault = false
