@@ -44,5 +44,5 @@ jobs:
           tags: |
             joshuasing/kani:latest
             joshuasing/kani:${{ inputs.version }}
-            ghcr.io/HyperaDev/kani:latest
-            ghcr.io/HyperaDev/kani:${{ inputs.version }}
+            ghcr.io/hyperadev/kani:latest
+            ghcr.io/hyperadev/kani:${{ inputs.version }}
