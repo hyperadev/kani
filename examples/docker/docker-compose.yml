@@ -27,7 +27,7 @@ services:
     expose:
       - 3000
     environment:
-      CLOUDFLARE_DOMAIN: "https://foo.cloudflareaccess.com/"
+      CLOUDFLARE_DOMAIN: "https://<team>.cloudflareaccess.com/"
 
   whoami:
     image: traefik/whoami

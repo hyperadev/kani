@@ -6,7 +6,9 @@ metadata:
 spec:
   forwardAuth:
     # Replace <AUD> with your Cloudflare Access application audience.
-    address: http://kani/<AUD>
+    # address: http://<service-name>.<namespace>.svc.cluster.local/<aud>
+    address: http://kani.default.svc.cluster.local/<AUD>
 
     # Optionally you can forward the authenticated user's email (or common name) to the backend.
-    authResponseHeaders: X-Auth-User
+    authResponseHeaders:
+     - "X-Auth-User"

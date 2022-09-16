@@ -1,5 +1,5 @@
 # GitHub Actions workflow to publish project to DockerHub
-name: "Publish"
+name: "Docker"
 on:
   workflow_dispatch:
     inputs:
@@ -9,8 +9,8 @@ on:
         type: string
 
 jobs:
-  docker:
-    name: "Docker"
+  stable:
+    name: "Deploy stable"
     runs-on: "ubuntu-latest"
     steps:
       - name: "Checkout repository"
@@ -28,9 +28,20 @@ jobs:
           username: "${{ secrets.DOCKERHUB_USERNAME }}"
           password: "${{ secrets.DOCKERHUB_TOKEN }}"
 
-      - name: "Push"
+      - name: "Login to GitHub Container Registry"
+        uses: docker/login-action@v2
+        with:
+          username: "${{ github.repository_owner }}"
+          password: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: "Build and push"
         uses: docker/build-push-action@v3
         with:
+          context: .
+          platforms: "linux/amd64,linux/arm64"
           push: true
-          tags: "joshuasing/kani:latest,joshuasing/kani:${{ github.event.inputs.version }}"
-          platforms: "linux/amd64"
+          tags: |
+            joshuasing/kani:latest
+            joshuasing/kani:${{ inputs.version }}
+            ghcr.io/HyperaDev/kani:latest
+            ghcr.io/HyperaDev/kani:${{ inputs.version }}

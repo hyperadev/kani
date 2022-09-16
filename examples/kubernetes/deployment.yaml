@@ -3,26 +3,37 @@ kind: Deployment
 metadata:
   name: kani
   namespace: default
-  labels:
-    app: kani
 spec:
   replicas: 1
   selector:
     matchLabels:
-      deployment: kani
+      app.kubernetes.io/name: kani
   strategy:
-    type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
   template:
     metadata:
       labels:
-        deployment: kani
+        app.kubernetes.io/name: kani
     spec:
       containers:
         - name: kani
           image: joshuasing/kani:latest
           imagePullPolicy: IfNotPresent
+
+          # Environment variables
+          env:
+            - name: CLOUDFLARE_DOMAIN
+              value: "https://<team>.cloudflareaccess.com"
+
+          # Ports
           ports:
-            - containerPort: 3000
+            - name: kani-http
+              containerPort: 3000
+
+          # Probes
           livenessProbe:
             httpGet:
               path: /

@@ -4,12 +4,11 @@ metadata:
   name: kani
   namespace: default
   labels:
-    app: kani
+    app.kubernetes.io/name: kani
 spec:
   type: ClusterIP
   ports:
-    - name: http
-      port: 80
-      protocol: TCP
+    - port: 80
+      targetPort: kani-http
   selector:
-    app: kani
+    app.kubernetes.io/name: kani
