@@ -32,5 +32,5 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: "joshuasing/kani:latest,joshuasing/kani:${{ inputs.version }}"
+          tags: "joshuasing/kani:latest,joshuasing/kani:${{ github.event.inputs.version }}"
           platforms: "linux/amd64"
