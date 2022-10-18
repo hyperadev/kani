@@ -49,5 +49,5 @@ spec:
               scheme: HTTP
           resources:
             limits:
-              memory: "32Mi"
-              cpu: "1"
+              memory: "16Mi"
+              cpu: "0.10"
