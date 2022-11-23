@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Build stage
-FROM golang:1.19.2-alpine as build
+FROM golang:1.19.3-alpine as build
 
 WORKDIR /build/kani
 COPY . .
@@ -9,7 +9,7 @@ COPY . .
 RUN GOOS=$(go env GOOS) GOARCH=$(go env GOARCH) go build ./cmd/kani
 
 # Run stage
-FROM golang:1.19.2-alpine
+FROM golang:1.19.3-alpine
 
 RUN adduser -D kani
 USER kani
