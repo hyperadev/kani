@@ -1,20 +1,17 @@
 # syntax=docker/dockerfile:1
 
-# Build stage
+## Build stage
 FROM golang:1.19.3-alpine as build
 
 WORKDIR /build/kani
 COPY . .
 
-RUN GOOS=$(go env GOOS) GOARCH=$(go env GOARCH) go build ./cmd/kani
+RUN GOOS=$(go env GOOS) GOARCH=$(go env GOARCH) CGO_ENABLED=0 GOGC=off \
+    go build -ldflags "-s -w" -o dist/kani ./cmd/kani
 
-# Run stage
-FROM golang:1.19.3-alpine
+## Run stage
+FROM scratch
 
-RUN adduser -D kani
-USER kani
+COPY --from=build /build/kani/dist/kani /bin/kani
 
-WORKDIR /home/kani
-COPY --from=build --chown=kani:kani /build/kani/kani ./
-
-CMD ["./kani"]
+ENTRYPOINT ["/bin/kani"]
