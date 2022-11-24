@@ -12,6 +12,7 @@ RUN GOOS=$(go env GOOS) GOARCH=$(go env GOARCH) CGO_ENABLED=0 GOGC=off \
 ## Run stage
 FROM scratch
 
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /build/kani/dist/kani /bin/kani
 
 ENTRYPOINT ["/bin/kani"]
