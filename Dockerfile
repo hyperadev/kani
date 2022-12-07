@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ## Build stage
-FROM golang:1.19.3-alpine as build
+FROM golang:1.19.4-alpine as build
 
 WORKDIR /build/kani
 COPY . .
