@@ -11,9 +11,6 @@ RUN adduser --disabled-password --gecos "" \
 WORKDIR /build/kani
 COPY . .
 
-RUN go mod download
-RUN go mod verify
-
 RUN GOOS=$(go env GOOS) GOARCH=$(go env GOARCH) CGO_ENABLED=0 GOGC=off \
     go build -trimpath -ldflags "-s -w" -o /build/kani/dist/kani ./cmd/kani
 
