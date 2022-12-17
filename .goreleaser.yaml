@@ -1,10 +1,5 @@
 project_name: kani
 
-before:
-  hooks:
-    - go mod tidy
-    - go generate ./...
-
 builds:
   - binary: kani
     main: ./cmd/kani/
@@ -59,8 +54,7 @@ dockers:
       - --label=org.label-schema.vendor="Hypera Development"
       - --label=org.label-schema.version={{ .Version }}
       - --label=org.label-schema.schema-version="1.0"
-    dockerfile: Dockerfile
-    use: buildx
+    dockerfile: goreleaser.Dockerfile
   - id: kani-arm64
     image_templates:
       - "joshuasing/kani:{{ .Version }}-arm64"
@@ -87,8 +81,7 @@ dockers:
       - --label=org.label-schema.vendor="Hypera Development"
       - --label=org.label-schema.version={{ .Version }}
       - --label=org.label-schema.schema-version="1.0"
-    dockerfile: Dockerfile
-    use: buildx
+    dockerfile: goreleaser.Dockerfile
   - id: kani-armv7
     image_templates:
       - "joshuasing/kani:{{ .Version }}-armv7"
@@ -116,8 +109,7 @@ dockers:
       - --label=org.label-schema.vendor="Hypera Development"
       - --label=org.label-schema.version={{ .Version }}
       - --label=org.label-schema.schema-version="1.0"
-    dockerfile: Dockerfile
-    use: buildx
+    dockerfile: goreleaser.Dockerfile
 
 docker_manifests:
   - name_template: "joshuasing/kani:latest"
@@ -155,7 +147,7 @@ source:
   enabled: true
 
 snapshot:
-  name_template: "{{ incpatch .Version }}-dev+{{ .ShortCommit }}"
+  name_template: "{{ incpatch .Version }}-dev.{{ .ShortCommit }}"
 
 checksum:
   name_template: '{{ .ProjectName }}_v{{ .Version }}_checksums.txt'
