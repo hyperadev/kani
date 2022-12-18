@@ -163,7 +163,7 @@ snapshot:
   name_template: "{{ incpatch .Version }}-{{ .ShortCommit }}"
 
 checksum:
-  name_template: '{{ .ProjectName }}_v{{ .Version }}_checksums.txt'
+  name_template: "{{ .ProjectName }}_v{{ .Version }}_checksums.txt"
   algorithm: sha256
 
 changelog:
@@ -179,17 +179,17 @@ changelog:
       - "^Merge branch"
   groups:
     - title: "Dependency updates"
-      regexp: "^(chore|fix)\\(deps\\):.*$"
-      order: 900
+      regexp: "^.*(chore|fix)\\(deps\\)*:+.*$"
+      order: 300
     - title: "Additions"
-      regexp: "^feat(\\(.*\\))?:.*$"
+      regexp: "^.*feat[(\\w)]*:+.*$"
       order: 100
     - title: "Fixes"
-      regexp: "^fix(\\(.*\\))?:.*$"
+      regexp: "^.*fix[(\\w)]*:+.*$"
       order: 200
-    - title: "Documentation"
-      regexp: "^docs(\\(.*\\))?:.*$"
-      order: 300
+    - title: 'Documentation'
+      regexp: "^.*docs[(\\w)]*:+.*$"
+      order: 400
     - title: "Other"
       order: 1000
 
@@ -200,6 +200,8 @@ release:
     name: "{{ .ProjectName }}"
   prerelease: auto
   mode: append
+  footer: |
+    **Full Changelog**: https://github.com/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}/compare/{{ .PreviousTag }}...{{ .Tag }}
 
 milestones:
   - repo:
