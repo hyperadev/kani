@@ -18,6 +18,8 @@ jobs:
     permissions:
       contents: read
       packages: write
+    env:
+      DOCKER_CLI_EXPERIMENTAL: enabled
     steps:
       - name: "Checkout repository"
         uses: actions/checkout@v3
@@ -30,6 +32,9 @@ jobs:
           go-version: "${{ env.GO_VERSION }}"
           cache: true
           check-latest: true
+
+      - name: "Run go mod tidy"
+        run: go mod tidy
 
       - name: "Set up QEMU"
         uses: docker/setup-qemu-action@v2

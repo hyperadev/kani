@@ -1,8 +1,14 @@
 project_name: kani
 
+env:
+  - AUTHOR=Hypera Development
+  - GITHUB_USER=hyperadev
+  - DOCKER_HUB_USER=joshuasing
+  - DESCRIPTION=Traefik ForwardAuth server for Cloudflare Access
+
 builds:
-  - binary: kani
-    main: ./cmd/kani/
+  - binary: "{{ .ProjectName }}"
+    main: "./cmd/{{ .ProjectName }}/"
     env:
       - CGO_ENABLED=0
       - GOGC=off
@@ -20,7 +26,7 @@ builds:
       - "7"
 
 archives:
-  - id: kani
+  - id: "{{ .ProjectName }}"
     name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     format: "tar.gz"
     files:
@@ -28,126 +34,133 @@ archives:
       - LICENSE
 
 dockers:
-  - id: kani-amd64
-    image_templates:
-      - "joshuasing/kani:{{ .Version }}-amd64"
-      - "ghcr.io/hyperadev/kani:{{ .Version }}-amd64"
+  - id: "{{ .ProjectName }}-amd64"
+    goos: linux
     goarch: amd64
+    image_templates:
+      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-amd64"
+    dockerfile: .goreleaser.Dockerfile
+    use: buildx
     build_flag_templates:
       - --platform=linux/amd64
       - --label=org.opencontainers.image.created={{ .Date }}
-      - --label=org.opencontainers.image.authors="Hypera Development"
+      - --label=org.opencontainers.image.authors={{ .Env.AUTHOR }}
       - --label=org.opencontainers.image.url={{ .GitURL }}
       - --label=org.opencontainers.image.source={{ .GitURL }}
       - --label=org.opencontainers.image.version=v{{ .Version }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
-      - --label=org.opencontainers.image.vendor="Hypera Development"
+      - --label=org.opencontainers.image.vendor={{ .Env.AUTHOR }}
       - --label=org.opencontainers.image.licenses=MIT
       - --label=org.opencontainers.image.title={{ .ProjectName }}
-      - --label=org.opencontainers.image.description="Traefik ForwardAuth server for Cloudflare Access"
+      - --label=org.opencontainers.image.description={{ .Env.DESCRIPTION }}
       - --label=org.label-schema.build-date={{ .Date }}
       - --label=org.label-schema.name={{ .ProjectName }}
-      - --label=org.label-schema.description="Traefik ForwardAuth server for Cloudflare Access"
+      - --label=org.label-schema.description={{ .Env.DESCRIPTION }}
       - --label=org.label-schema.url={{ .GitURL }}
       - --label=org.label-schema.vcs-url={{ .GitURL }}
       - --label=org.label-schema.vcs-ref={{ .FullCommit }}
-      - --label=org.label-schema.vendor="Hypera Development"
+      - --label=org.label-schema.vendor={{ .Env.AUTHOR }}
       - --label=org.label-schema.version={{ .Version }}
-      - --label=org.label-schema.schema-version="1.0"
-    dockerfile: goreleaser.Dockerfile
-  - id: kani-arm64
-    image_templates:
-      - "joshuasing/kani:{{ .Version }}-arm64"
-      - "ghcr.io/hyperadev/kani:{{ .Version }}-arm64"
+      - --label=org.label-schema.schema-version=1.0
+  - id: "{{ .ProjectName }}-arm64"
+    goos: linux
     goarch: arm64
+    image_templates:
+      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64v8"
+      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64v8"
+    dockerfile: .goreleaser.Dockerfile
+    use: buildx
     build_flag_templates:
-      - --platform=linux/arm64
+      - --platform=linux/arm64/v8
       - --label=org.opencontainers.image.created={{ .Date }}
-      - --label=org.opencontainers.image.authors="Hypera Development"
+      - --label=org.opencontainers.image.authors={{ .Env.AUTHOR }}
       - --label=org.opencontainers.image.url={{ .GitURL }}
       - --label=org.opencontainers.image.source={{ .GitURL }}
       - --label=org.opencontainers.image.version=v{{ .Version }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
-      - --label=org.opencontainers.image.vendor="Hypera Development"
+      - --label=org.opencontainers.image.vendor={{ .Env.AUTHOR }}
       - --label=org.opencontainers.image.licenses=MIT
       - --label=org.opencontainers.image.title={{ .ProjectName }}
-      - --label=org.opencontainers.image.description="Traefik ForwardAuth server for Cloudflare Access"
+      - --label=org.opencontainers.image.description={{ .Env.DESCRIPTION }}
       - --label=org.label-schema.build-date={{ .Date }}
       - --label=org.label-schema.name={{ .ProjectName }}
-      - --label=org.label-schema.description="Traefik ForwardAuth server for Cloudflare Access"
+      - --label=org.label-schema.description={{ .Env.DESCRIPTION }}
       - --label=org.label-schema.url={{ .GitURL }}
       - --label=org.label-schema.vcs-url={{ .GitURL }}
       - --label=org.label-schema.vcs-ref={{ .FullCommit }}
-      - --label=org.label-schema.vendor="Hypera Development"
+      - --label=org.label-schema.vendor={{ .Env.AUTHOR }}
       - --label=org.label-schema.version={{ .Version }}
-      - --label=org.label-schema.schema-version="1.0"
-    dockerfile: goreleaser.Dockerfile
-  - id: kani-armv7
-    image_templates:
-      - "joshuasing/kani:{{ .Version }}-armv7"
-      - "ghcr.io/hyperadev/kani:{{ .Version }}-armv7"
+      - --label=org.label-schema.schema-version=1.0
+  - id: "{{ .ProjectName }}-armv7"
+    goos: linux
     goarch: arm
     goarm: "7"
+    image_templates:
+      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-armv7"
+      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-armv7"
+    dockerfile: .goreleaser.Dockerfile
+    use: buildx
     build_flag_templates:
       - --platform=linux/arm/v7
       - --label=org.opencontainers.image.created={{ .Date }}
-      - --label=org.opencontainers.image.authors="Hypera Development"
+      - --label=org.opencontainers.image.authors={{ .Env.AUTHOR }}
       - --label=org.opencontainers.image.url={{ .GitURL }}
       - --label=org.opencontainers.image.source={{ .GitURL }}
       - --label=org.opencontainers.image.version=v{{ .Version }}
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
-      - --label=org.opencontainers.image.vendor="Hypera Development"
+      - --label=org.opencontainers.image.vendor={{ .Env.AUTHOR }}
       - --label=org.opencontainers.image.licenses=MIT
       - --label=org.opencontainers.image.title={{ .ProjectName }}
-      - --label=org.opencontainers.image.description="Traefik ForwardAuth server for Cloudflare Access"
+      - --label=org.opencontainers.image.description={{ .Env.DESCRIPTION }}
       - --label=org.label-schema.build-date={{ .Date }}
       - --label=org.label-schema.name={{ .ProjectName }}
-      - --label=org.label-schema.description="Traefik ForwardAuth server for Cloudflare Access"
+      - --label=org.label-schema.description={{ .Env.DESCRIPTION }}
       - --label=org.label-schema.url={{ .GitURL }}
       - --label=org.label-schema.vcs-url={{ .GitURL }}
       - --label=org.label-schema.vcs-ref={{ .FullCommit }}
-      - --label=org.label-schema.vendor="Hypera Development"
+      - --label=org.label-schema.vendor={{ .Env.AUTHOR }}
       - --label=org.label-schema.version={{ .Version }}
-      - --label=org.label-schema.schema-version="1.0"
-    dockerfile: goreleaser.Dockerfile
+      - --label=org.label-schema.schema-version=1.0
 
 docker_manifests:
-  - name_template: "joshuasing/kani:latest"
+  - name_template: "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:latest"
     image_templates:
-      - "joshuasing/kani:{{ .Version }}-amd64"
-      - "joshuasing/kani:{{ .Version }}-arm64"
-      - "joshuasing/kani:{{ .Version }}-armv7"
-  - name_template: "joshuasing/kani:{{ .Version }}"
+      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-armv7"
+  - name_template: "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}"
     image_templates:
-      - "joshuasing/kani:{{ .Version }}-amd64"
-      - "joshuasing/kani:{{ .Version }}-arm64"
-      - "joshuasing/kani:{{ .Version }}-armv7"
-  - name_template: "joshuasing/kani:{{ .Major }}.{{ .Minor }}"
+      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-armv7"
+  - name_template: "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Major }}.{{ .Minor }}"
     image_templates:
-      - "joshuasing/kani:{{ .Version }}-amd64"
-      - "joshuasing/kani:{{ .Version }}-arm64"
-      - "joshuasing/kani:{{ .Version }}-armv7"
-  - name_template: "ghcr.io/hyperadev/kani:latest"
+      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-armv7"
+  - name_template: "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:latest"
     image_templates:
-      - "ghcr.io/hyperadev/kani:{{ .Version }}-amd64"
-      - "ghcr.io/hyperadev/kani:{{ .Version }}-arm64"
-      - "ghcr.io/hyperadev/kani:{{ .Version }}-armv7"
-  - name_template: "ghcr.io/hyperadev/kani:{{ .Version }}"
+      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-armv7"
+  - name_template: "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}"
     image_templates:
-      - "ghcr.io/hyperadev/kani:{{ .Version }}-amd64"
-      - "ghcr.io/hyperadev/kani:{{ .Version }}-arm64"
-      - "ghcr.io/hyperadev/kani:{{ .Version }}-armv7"
-  - name_template: "ghcr.io/hyperadev/kani:{{ .Major }}.{{ .Minor }}"
+      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-armv7"
+  - name_template: "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Major }}.{{ .Minor }}"
     image_templates:
-      - "ghcr.io/hyperadev/kani:{{ .Version }}-amd64"
-      - "ghcr.io/hyperadev/kani:{{ .Version }}-arm64"
-      - "ghcr.io/hyperadev/kani:{{ .Version }}-armv7"
+      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-armv7"
 
 source:
   enabled: true
+  name_template: "{{ .ProjectName }}_v{{ .Version }}_sources"
 
 snapshot:
-  name_template: "{{ incpatch .Version }}-dev.{{ .ShortCommit }}"
+  name_template: "{{ incpatch .Version }}-{{ .ShortCommit }}"
 
 checksum:
   name_template: '{{ .ProjectName }}_v{{ .Version }}_checksums.txt'
@@ -181,12 +194,18 @@ changelog:
       order: 1000
 
 release:
-  name_template: "{{.ProjectName}} v{{.Version}}"
+  name_template: "{{ .ProjectName }} v{{ .Version }}"
   github:
-    owner: HyperaDev
-    name: kani
+    owner: "{{ .Env.GITHUB_USER }}"
+    name: "{{ .ProjectName }}"
   prerelease: auto
   mode: append
+
+milestones:
+  - repo:
+      owner: "{{ .Env.GITHUB_USER }}"
+      name: "{{ .ProjectName }}"
+    close: true
 
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 # vim: set ts=2 sw=2 tw=0 fo=cnqoj

@@ -3,6 +3,7 @@
 ## Build stage
 FROM golang:1.19.4-alpine as build
 
+RUN apk --no-cache add ca-certificates tzdata
 RUN adduser --disabled-password --gecos "" \
     --home "/kani" --no-create-home \
     --shell="/sbin/nologin" --uid 65532 \
@@ -23,6 +24,7 @@ FROM scratch
 COPY --from=build /etc/group /etc/group
 COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=build /build/kani/dist/kani /bin/kani
 
 USER kani:kani
