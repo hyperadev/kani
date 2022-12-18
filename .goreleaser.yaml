@@ -63,7 +63,7 @@ dockers:
       - --label=org.label-schema.vendor={{ .Env.AUTHOR }}
       - --label=org.label-schema.version={{ .Version }}
       - --label=org.label-schema.schema-version=1.0
-  - id: "{{ .ProjectName }}-arm64"
+  - id: "{{ .ProjectName }}-arm64v8
     goos: linux
     goarch: arm64
     image_templates:
@@ -127,32 +127,32 @@ docker_manifests:
   - name_template: "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:latest"
     image_templates:
       - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-amd64"
-      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64v8
       - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-armv7"
   - name_template: "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}"
     image_templates:
       - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-amd64"
-      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64v8
       - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-armv7"
   - name_template: "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Major }}.{{ .Minor }}"
     image_templates:
       - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-amd64"
-      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64v8
       - "{{ .Env.DOCKER_HUB_USER }}/{{ .ProjectName }}:{{ .Version }}-armv7"
   - name_template: "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:latest"
     image_templates:
       - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-amd64"
-      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64v8
       - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-armv7"
   - name_template: "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}"
     image_templates:
       - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-amd64"
-      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64v8
       - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-armv7"
   - name_template: "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Major }}.{{ .Minor }}"
     image_templates:
       - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-amd64"
-      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-arm64v8
       - "ghcr.io/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}:{{ .Version }}-armv7"
 
 source:
