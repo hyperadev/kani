@@ -3,7 +3,7 @@
 ## Setup stage
 FROM alpine:3.17.0 as builder
 
-RUN apk --update add ca-certificates tzdata
+RUN apk --no-cache add ca-certificates tzdata
 RUN adduser  --disabled-password --gecos "" \
     --home "/kani" --no-create-home \
     --shell="/sbin/nologin" --uid 65532 \

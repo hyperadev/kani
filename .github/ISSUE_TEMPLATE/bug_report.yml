@@ -43,7 +43,7 @@ body:
       value: |
         Operating System: <!-- e.g. Ubuntu 22.04 -->
         Architecture: <!-- e.g. AMD64 -->
-        
+
         Kani version: <!-- e.g. 1.2.0, 'latest' will not be accepted -->
         Docker version: <!-- Run `docker -v` (or N/A if you are not using Docker) -->
         Kubernetes version: <!-- Run `kubectl version` (or N/A if you are not using K8s) -->

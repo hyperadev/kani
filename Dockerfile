@@ -3,7 +3,7 @@
 ## Build stage
 FROM golang:1.19.4-alpine as build
 
-RUN apk --update add ca-certificates tzdata
+RUN apk --no-cache add ca-certificates tzdata
 RUN adduser --disabled-password --gecos "" \
     --home "/kani" --no-create-home \
     --shell="/sbin/nologin" --uid 65532 \
