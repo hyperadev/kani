@@ -25,9 +25,9 @@ package auth
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/coreos/go-oidc/v3/oidc"
@@ -43,7 +43,7 @@ type Claims struct {
 	CommonName string `json:"common_name"`
 }
 
-const certificatesPath = "%scdn-cgi/access/certs"
+const certificatesPath = "/cdn-cgi/access/certs"
 
 var (
 	config       *Config
@@ -53,11 +53,13 @@ var (
 type RouteHandler = func(w http.ResponseWriter, req *http.Request, aud string)
 
 func Route(conf *Config) RouteHandler {
-	if !strings.HasSuffix(conf.Domain, "/") {
-		conf.Domain = conf.Domain + "/"
-	}
+	conf.Domain = strings.TrimSuffix(conf.Domain, "/")
 	config = conf
-	remoteKeySet = oidc.NewRemoteKeySet(context.TODO(), fmt.Sprintf(certificatesPath, conf.Domain))
+	jwksURL, err := url.JoinPath(conf.Domain, certificatesPath)
+	if err != nil {
+		log.Fatalf("failed to join domain and certificates path: %v", err)
+	}
+	remoteKeySet = oidc.NewRemoteKeySet(context.TODO(), jwksURL)
 
 	return func(w http.ResponseWriter, req *http.Request, aud string) {
 		token := req.Header.Get("Cf-Access-Jwt-Assertion")
