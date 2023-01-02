@@ -204,9 +204,9 @@ release:
     **Full Changelog**: https://github.com/{{ .Env.GITHUB_USER }}/{{ .ProjectName }}/compare/{{ .PreviousTag }}...{{ .Tag }}
 
 milestones:
-  - repo:
-      owner: "{{ .Env.GITHUB_USER }}"
-      name: "{{ .ProjectName }}"
+  - repo: # Templating isn't supported here
+      owner: "HyperaDev"
+      name: "kani"
     close: true
 
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json

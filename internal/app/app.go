@@ -26,12 +26,11 @@ package app
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
-
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/recover"
 
 	"github.com/HyperaDev/kani/internal/auth"
 )
@@ -45,32 +44,32 @@ type Config struct {
 func Start(config *Config) {
 	log.Println("Starting...")
 
-	router := fiber.New(fiber.Config{
-		ServerHeader:          "Kani",
-		DisableStartupMessage: true,
-		JSONEncoder:           jsonEncoder(),
-		ErrorHandler:          errorHandler(),
-	})
-
-	router.Use(recover.New())
-
-	router.Get("/", func(ctx *fiber.Ctx) error {
-		return ctx.SendStatus(200)
-	})
-
-	router.Get("/:aud", auth.Route(&auth.Config{
+	http.HandleFunc("/", handler(auth.Route(&auth.Config{
 		Domain:    config.Domain,
 		LogAccess: config.LogAccess,
-	}))
+	})))
 
 	exit := make(chan os.Signal, 1)
 	signal.Notify(exit, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 
 	go func() {
-		log.Fatalln(router.Listen(fmt.Sprintf(":%d", config.Port)))
+		log.Fatalln(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), http.DefaultServeMux))
 	}()
 
 	log.Printf("Successfully started, listening on :%d\n", config.Port)
 	<-exit
 	log.Println("Goodbye")
+}
+
+func handler(handle auth.RouteHandler) func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
+		aud := strings.TrimPrefix(req.URL.Path, "/")
+		if len(aud) > 0 {
+			// Handle /:aud
+			handle(w, req, aud)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+	}
 }

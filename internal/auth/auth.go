@@ -27,9 +27,10 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
+	"strings"
 
 	"github.com/coreos/go-oidc/v3/oidc"
-	"github.com/gofiber/fiber/v2"
 )
 
 type Config struct {
@@ -42,28 +43,33 @@ type Claims struct {
 	CommonName string `json:"common_name"`
 }
 
-const certificatesPath = "%s/cdn-cgi/access/certs"
+const certificatesPath = "%scdn-cgi/access/certs"
 
 var (
 	config       *Config
 	remoteKeySet *oidc.RemoteKeySet
 )
 
-func Route(conf *Config) func(ctx *fiber.Ctx) error {
+type RouteHandler = func(w http.ResponseWriter, req *http.Request, aud string)
+
+func Route(conf *Config) RouteHandler {
+	if !strings.HasSuffix(conf.Domain, "/") {
+		conf.Domain = conf.Domain + "/"
+	}
 	config = conf
 	remoteKeySet = oidc.NewRemoteKeySet(context.TODO(), fmt.Sprintf(certificatesPath, conf.Domain))
 
-	return func(ctx *fiber.Ctx) error {
-		audience := ctx.Params("aud")
-		token := ctx.Get("Cf-Access-Jwt-Assertion", "")
-
-		if len(token) == 0 {
-			return fiber.ErrUnauthorized
+	return func(w http.ResponseWriter, req *http.Request, aud string) {
+		token := req.Header.Get("Cf-Access-Jwt-Assertion")
+		if len(token) < 1 {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
 		}
 
-		claims, err := verifyToken(audience, token, ctx.UserContext())
+		claims, err := verifyToken(aud, token, req.Context())
 		if err != nil {
-			return err
+			w.WriteHeader(http.StatusUnauthorized)
+			return
 		}
 
 		var id string
@@ -74,11 +80,11 @@ func Route(conf *Config) func(ctx *fiber.Ctx) error {
 		}
 
 		if config.LogAccess {
-			log.Printf("Access granted for %s to %s\n", id, audience)
+			log.Printf("Access granted for %s to %s\n", id, aud)
 		}
 
-		ctx.Set("X-Auth-User", id)
-		return ctx.SendStatus(200)
+		w.Header().Set("X-Auth-User", id)
+		w.WriteHeader(http.StatusOK)
 	}
 }
 
@@ -88,13 +94,13 @@ func verifyToken(audience string, token string, context context.Context) (*Claim
 
 	id, err := verifier.Verify(context, token)
 	if err != nil {
-		return nil, fiber.ErrUnauthorized
+		return nil, err
 	}
 
 	claims := &Claims{}
 	err = id.Claims(claims)
 	if err != nil {
-		return nil, fiber.ErrUnauthorized
+		return nil, err
 	}
 
 	return claims, nil
