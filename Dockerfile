@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ## Build stage
-FROM golang:1.20.1-alpine as build
+FROM golang:1.20.2-alpine as build
 
 RUN apk --no-cache add ca-certificates tzdata
 RUN adduser --disabled-password --gecos "" \
