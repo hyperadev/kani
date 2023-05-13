@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ## Setup stage
-FROM alpine:3.17.3 as builder
+FROM alpine:3.18.0 as builder
 
 RUN apk --no-cache add ca-certificates tzdata
 RUN adduser  --disabled-password --gecos "" \
