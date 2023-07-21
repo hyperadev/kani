@@ -4,7 +4,7 @@ env:
   - AUTHOR=Hypera Development
   - GITHUB_USER=hyperadev
   - DOCKER_HUB_USER=joshuasing
-  - DESCRIPTION=Traefik ForwardAuth server for Cloudflare Access
+  - DESCRIPTION=A fast Traefik forward-auth server for validating Cloudflare Access requests
 
 builds:
   - binary: "{{ .ProjectName }}"
@@ -171,8 +171,6 @@ changelog:
   use: github
   filters:
     exclude:
-      - "^test"
-      - "^chore"
       - "merge conflict"
       - "^Merge pull request"
       - "^Merge remote-tracking branch"
