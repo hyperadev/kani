@@ -4,10 +4,14 @@
 FROM golang:1.20.6-alpine as build
 
 RUN apk --no-cache add ca-certificates tzdata
-RUN adduser --disabled-password --gecos "" \
-    --home "/kani" --no-create-home \
-    --shell="/sbin/nologin" --uid 65532 \
+RUN addgroup --gid 65532 kani && \
+    adduser  --disabled-password --gecos "" \
+    --home "/etc/kani" --no-create-home \
+    -G kani --uid 65532 \
+    --shell="/sbin/nologin" \
     kani
+
+RUN mkdir -p /etc/kani/ && chown -R kani:kani /etc/kani/
 
 WORKDIR /build/kani
 COPY . .
@@ -25,8 +29,9 @@ COPY --from=build /etc/group /etc/group
 COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=build /etc/kani /etc/kani
 COPY --from=build /build/kani/dist/kani /bin/kani
 
 USER kani:kani
-EXPOSE 80/tcp
+WORKDIR /etc/kani/
 ENTRYPOINT ["/bin/kani"]
