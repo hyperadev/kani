@@ -1,6 +1,7 @@
 /*
- * Kani - Traefik forward auth server for Cloudflare Access
- * Copyright (c) 2022 Joshua Sing.
+ * This file is a part of the Kani Project, licensed under the MIT License.
+ *
+ * Copyright (c) 2022-2023 Joshua Sing <joshua@hypera.dev>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
