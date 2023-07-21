@@ -1,9 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     ":semanticCommits",
-    ":semanticPrefixChore",
+    ":semanticCommitTypeAll(chore)",
     ":semanticCommitScope(deps)"
   ],
   "labels": [
@@ -11,5 +11,6 @@
   ],
   "assigneesFromCodeOwners": true,
   "configMigration": true,
-  "prHourlyLimit": 4
+  "commitMessageAction": "update",
+  "commitMessagePrefix": "chore(deps):"
 }
