@@ -28,8 +28,8 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/HyperaDev/kani/internal/app"
-	"github.com/HyperaDev/kani/internal/utils"
+	"hypera.dev/kani/internal/app"
+	"hypera.dev/kani/internal/utils"
 )
 
 var config *app.Config

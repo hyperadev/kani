@@ -33,7 +33,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/HyperaDev/kani/internal/auth"
+	"hypera.dev/kani/internal/auth"
 )
 
 type Config struct {

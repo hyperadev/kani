@@ -1,4 +1,4 @@
-module github.com/HyperaDev/kani
+module hypera.dev/kani
 
 go 1.19
 

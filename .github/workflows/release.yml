@@ -60,7 +60,7 @@ jobs:
         with:
           version: "latest"
           distribution: "goreleaser"
-          args: "release --rm-dist"
+          args: "release --clean"
         env:
           GITHUB_TOKEN: "${{ secrets.BOT_GITHUB_TOKEN }}"
 
