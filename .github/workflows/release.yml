@@ -1,67 +1,17 @@
-# GitHub Actions workflow to create a new release
+# GitHub Actions workflow to release a Go project using GoReleaser.
+# Releases are published from tags matching "v*.*.*".
 name: "Release"
 on:
   push:
     tags: [ "v*.*.*" ]
 
-concurrency:
-  group: release
-  cancel-in-progress: true
-
-env:
-  GO_VERSION: "1.21.3"
-
 jobs:
   release:
     name: "Release"
-    runs-on: "ubuntu-latest"
-    permissions:
-      contents: read
-      packages: write
-    env:
-      DOCKER_CLI_EXPERIMENTAL: enabled
-    steps:
-      - name: "Checkout repository"
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: "Set up Go ${{ env.GO_VERSION }}"
-        uses: actions/setup-go@v4
-        with:
-          go-version: "${{ env.GO_VERSION }}"
-          cache: true
-          check-latest: true
-
-      - name: "Run go mod tidy"
-        run: go mod tidy
-
-      - name: "Set up QEMU"
-        uses: docker/setup-qemu-action@v3
-
-      - name: "Set up Docker Buildx"
-        uses: docker/setup-buildx-action@v3
-
-      - name: "Login to DockerHub"
-        uses: docker/login-action@v3
-        with:
-          username: "${{ secrets.DOCKERHUB_USERNAME }}"
-          password: "${{ secrets.DOCKERHUB_TOKEN }}"
-
-      - name: "Login to GitHub Container Registry"
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: "${{ github.repository_owner }}"
-          password: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: "Release"
-        uses: goreleaser/goreleaser-action@v5
-        with:
-          version: "latest"
-          distribution: "goreleaser"
-          args: "release --clean"
-        env:
-          GITHUB_TOKEN: "${{ secrets.BOT_GITHUB_TOKEN }}"
-
-# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+    uses: HyperaDev/actions/.github/workflows/go-release.yml@main
+    with:
+      docker_enabled: true
+    secrets:
+      DOCKERHUB_USERNAME: "${{ secrets.DOCKERHUB_USERNAME }}"
+      DOCKERHUB_TOKEN: "${{ secrets.DOCKERHUB_TOKEN }}"
+      GITHUB_RELEASE_TOKEN: "${{ secrets.BOT_GITHUB_TOKEN }}"
