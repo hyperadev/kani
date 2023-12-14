@@ -1,64 +1,17 @@
-# GitHub Actions workflow to build, test and publish the project.
+# GitHub Actions workflow to build and test a Go project.
 name: "Go"
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
-env:
-  GO_VERSION: "1.21.3"
+  merge_group:
 
 jobs:
-  govulncheck:
-    name: "Vulnerability Check"
-    runs-on: "ubuntu-latest"
-    permissions:
-      contents: read
-    steps:
-      - name: "Checkout repository"
-        uses: actions/checkout@v4
-
-      - name: "Set up Go ${{ env.GO_VERSION }}"
-        uses: actions/setup-go@v4
-        with:
-          go-version: "${{ env.GO_VERSION }}"
-          cache: true
-
-      - name: "Install"
-        run: go install golang.org/x/vuln/cmd/govulncheck@latest
-
-      - name: "Run"
-        run: govulncheck ./...
-
   build:
     name: "Build"
-    runs-on: "ubuntu-latest"
-    permissions:
-      contents: read
-    steps:
-      - name: "Checkout repository"
-        uses: actions/checkout@v4
-
-      - name: "Set up Go ${{ env.GO_VERSION }}"
-        uses: actions/setup-go@v4
-        with:
-          go-version: "${{ env.GO_VERSION }}"
-          cache: true
-
-      - name: "Download dependencies"
-        run: go mod download
-
-      - name: "Verify dependencies"
-        run: go mod verify
-
-      - name: "Build"
-        run: go build -v ./...
-
-      - name: "Test"
-        run: go test -v ./...
-
-      - name: "Test (race)"
-        run: go test -race -v ./...
-
-# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+    uses: HyperaDev/actions/.github/workflows/go-build.yml@main
+    with:
+      go_version: "stable"
+      codecov_enabled: true
+      vulncheck_enabled: true
