@@ -4,7 +4,7 @@ go 1.21
 
 toolchain go1.23.4
 
-require github.com/coreos/go-oidc/v3 v3.11.0
+require github.com/coreos/go-oidc/v3 v3.12.0
 
 require (
 	github.com/go-jose/go-jose/v3 v3.0.3 // indirect
