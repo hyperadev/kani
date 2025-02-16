@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ## Build stage
-FROM golang:1.23.4-alpine@sha256:6c5c9590f169f77c8046e45c611d3b28fe477789acd8d3762d23d4744de69812 as build
+FROM golang:1.24.0-alpine@sha256:2d40d4fc278dad38be0777d5e2a88a2c6dee51b0b29c97a764fc6c6a11ca893c as build
 
 RUN apk --no-cache add ca-certificates tzdata
 RUN addgroup --gid 65532 kani && \
