@@ -22,7 +22,7 @@
 
 [Kani (カニ)](https://ja.wikipedia.org/wiki/カニ) ([Pronunciation](http://ipa-reader.xyz/?text=kan%CA%B2i)) means Crab in
 Japanese.
-I'm not entirely sure what I decided to use this name, but here we are.
+I'm not entirely sure why I decided to use this name, but here we are.
 Kani is designed to be a [Traefik](https://github.com/traefik/traefik) ForwardAuth server for
 validating [Cloudflare Access](https://www.cloudflare.com/products/zero-trust/access/) requests.
 
