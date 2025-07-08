@@ -9,9 +9,12 @@ jobs:
   release:
     name: "Release"
     uses: HyperaDev/actions/.github/workflows/go-release.yml@main
+    permissions:
+      contents: write # Create releases
+      packages: write # Write packages
     with:
       docker_enabled: true
     secrets:
       DOCKERHUB_USERNAME: "${{ secrets.DOCKERHUB_USERNAME }}"
       DOCKERHUB_TOKEN: "${{ secrets.DOCKERHUB_TOKEN }}"
-      GITHUB_RELEASE_TOKEN: "${{ secrets.BOT_GITHUB_TOKEN }}"
+      GITHUB_RELEASE_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
