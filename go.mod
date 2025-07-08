@@ -2,7 +2,7 @@ module hypera.dev/kani
 
 go 1.24
 
-toolchain go1.24.4
+toolchain go1.24.5
 
 require github.com/coreos/go-oidc/v3 v3.14.1
 
