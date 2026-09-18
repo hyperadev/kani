@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ## Setup stage
-FROM alpine:3.22.1@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1 as builder
+FROM alpine:3.24.2@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6 as builder
 
 RUN apk --no-cache add ca-certificates tzdata
 RUN addgroup --gid 65532 kani && \
