@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     name: "Build"
-    uses: HyperaDev/actions/.github/workflows/go-build.yml@main
+    uses: HyperaDev/actions/.github/workflows/go-build.yml@beddc3665d0e5acb585777857b14115017633dd0 # main
     with:
       go_version: "stable"
       codecov_enabled: true
